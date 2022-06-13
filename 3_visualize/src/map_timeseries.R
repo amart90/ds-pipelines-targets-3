@@ -1,6 +1,5 @@
 map_timeseries <- function(site_info, plot_info_csv, out_file) {
   # libraries: leaflet, leafpop, htmlwidgets
-
   # prepare data
   map_data <- readr::read_csv(plot_info_csv, col_types=cols()) %>%
     extract(col='filepath', into='state_cd', regex='3_visualize/out/timeseries_([[:alpha:]]{2})\\.png', remove=FALSE) %>%

@@ -5,7 +5,7 @@ library(tibble)
 
 
 options(tidyverse.quiet = TRUE)
-tar_option_set(packages = c("tidyverse", "dataRetrieval", "urbnmapr", "rnaturalearth", "cowplot", "lubridate"))
+tar_option_set(packages = c("tidyverse", "dataRetrieval", "urbnmapr", "rnaturalearth", "cowplot", "lubridate", "leaflet", "leafpop", "htmlwidgets"))
 
 # Load functions needed by targets below
 source("1_fetch/src/find_oldest_sites.R")
@@ -15,9 +15,10 @@ source("3_visualize/src/map_sites.R")
 source("3_visualize/src/plot_site_data.R")
 source("3_visualize/src/plot_data_coverage.R")
 source("2_process/src/summarize_targets.R")
+source("3_visualize/src/map_timeseries.R")
 
 # Configuration
-states <- c('WI','MN','MI', 'IL', 'IN', 'IA')
+states <- c('WI','MN', 'OH','MI', 'IL', 'IN', 'IA')
 parameter <- c('00060')
 
 # Targets
@@ -34,7 +35,8 @@ mapped_by_state_targets <- tar_map(
   tar_target(tally,
              tally_site_obs(nwis_data)),
   tar_target(timeseries_png,
-             plot_site_data(state_plot_files, nwis_data, parameter))
+             plot_site_data(state_plot_files, nwis_data, parameter),
+             format = "file")
 )
 
 list(
@@ -68,6 +70,15 @@ list(
   tar_target(
     site_map_png,
     map_sites("3_visualize/out/site_map.png", oldest_active_sites),
+    format = "file"
+  ),
+
+  # Leaflet map
+  tar_target(
+    timeseries_map_html,
+    map_timeseries(site_info = oldest_active_sites,
+                   plot_info_csv = summary_state_timeseries_csv,
+                   out_file = "3_visualize/out/timeseries_map.html"),
     format = "file"
   )
 )

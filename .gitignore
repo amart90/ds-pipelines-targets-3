@@ -7,4 +7,9 @@
 */tmp/*
 _targets/
 */out/*
+*/log/*
+
+
+# Exceptions
 !*/out/empty
+!*/log/empty
