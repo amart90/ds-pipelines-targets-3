@@ -1,0 +1,8 @@
+tar_name,filepath,hash
+timeseries_png_WI,3_visualize/out/timeseries_WI.png,7c7a0a76d8907c52
+timeseries_png_MN,3_visualize/out/timeseries_MN.png,2ad7e8a1cb74c0ec
+timeseries_png_OH,3_visualize/out/timeseries_OH.png,a0b10247ea620bf8
+timeseries_png_MI,3_visualize/out/timeseries_MI.png,a5c24c0422040a92
+timeseries_png_IL,3_visualize/out/timeseries_IL.png,7f411f6800456486
+timeseries_png_IN,3_visualize/out/timeseries_IN.png,13c0eb7c744d47a8
+timeseries_png_IA,3_visualize/out/timeseries_IA.png,7988e8889f661e04
