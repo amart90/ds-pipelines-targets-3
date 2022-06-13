@@ -27,6 +27,7 @@ list(
   tar_map(
     values = tibble(state_abb = states) %>%
       mutate(state_plot_files = sprintf("3_visualize/out/timeseries_%s.png", state_abb)),
+    names = state_abb,
     tar_target(nwis_inventory,
                filter(oldest_active_sites, state_cd == state_abb)),
     tar_target(nwis_data,
@@ -34,8 +35,7 @@ list(
     tar_target(tally,
                tally_site_obs(nwis_data)),
     tar_target(timeseries_png,
-               plot_site_data(state_plot_files, nwis_data, parameter)),
-    names = state_abb
+               plot_site_data(state_plot_files, nwis_data, parameter))
   ),
 
   # Map oldest sites
