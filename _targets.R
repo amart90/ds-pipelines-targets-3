@@ -13,6 +13,8 @@ source("1_fetch/src/get_site_data.R")
 source("2_process/src/tally_site_obs.R")
 source("3_visualize/src/map_sites.R")
 source("3_visualize/src/plot_site_data.R")
+source("3_visualize/src/plot_data_coverage.R")
+source("2_process/src/summarize_targets.R")
 
 # Configuration
 states <- c('WI','MN','MI', 'IL', 'IN', 'IA')
@@ -39,14 +41,30 @@ list(
   # Identify oldest sites
   tar_target(oldest_active_sites, find_oldest_sites(states, parameter)),
 
-  #
+  # Static branch object from above
   mapped_by_state_targets,
 
+  # Combine branch outputs
   tar_combine(obs_tallies,
               mapped_by_state_targets[[3]],
               command = combine_obs_tallies(!!!.x)),
 
-    # Map oldest sites
+  # Build metadata summary
+  tar_combine(
+    summary_state_timeseries_csv,
+    mapped_by_state_targets[[4]],
+    command = summarize_targets('3_visualize/log/summary_state_timeseries.csv', !!!.x),
+    format="file"
+  ),
+
+  # Plot data coverage
+  tar_target(plot_data_coverage_png,
+             plot_data_coverage(obs_tallies,
+                                out_file = "3_visualize/out/data_coverage.png",
+                                parameter = parameter),
+             format = "file"),
+
+  # Map oldest sites
   tar_target(
     site_map_png,
     map_sites("3_visualize/out/site_map.png", oldest_active_sites),
