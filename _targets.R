@@ -2,6 +2,8 @@ suppressPackageStartupMessages(library(tidyverse))
 library(targets)
 library(tarchetypes)
 library(tibble)
+library(retry)
+
 
 
 options(tidyverse.quiet = TRUE)
@@ -18,7 +20,10 @@ source("2_process/src/summarize_targets.R")
 source("3_visualize/src/map_timeseries.R")
 
 # Configuration
-states <- c('WI','MN', 'OH','MI', 'IL', 'IN', 'IA')
+states <- c('AL','AZ','AR','CA','CO','CT','DE','DC','FL','GA','ID','IL','IN','IA',
+            'KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH',
+            'NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX',
+            'UT','VT','VA','WA','WV','WI','WY','AK','HI','GU','PR')
 parameter <- c('00060')
 
 # Targets
@@ -31,7 +36,9 @@ mapped_by_state_targets <- tar_map(
   tar_target(nwis_inventory,
              filter(oldest_active_sites, state_cd == state_abb)),
   tar_target(nwis_data,
-             get_site_data(nwis_inventory, state_abb, parameter)),
+             retry(get_site_data(nwis_inventory, state_abb, parameter),
+                   when = "Ugh, the internet data transfer failed! Try again.",
+                   max_tries = 30)),
   tar_target(tally,
              tally_site_obs(nwis_data)),
   tar_target(timeseries_png,
