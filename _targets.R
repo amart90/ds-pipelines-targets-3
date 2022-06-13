@@ -40,7 +40,7 @@ list(
   tar_target(oldest_active_sites, find_oldest_sites(states, parameter)),
 
   #
-  #tar_target(mapped_by_state_targets, mapped_by_state_targets),
+  mapped_by_state_targets,
 
   tar_combine(obs_tallies,
               mapped_by_state_targets[[3]],
