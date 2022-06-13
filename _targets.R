@@ -41,20 +41,21 @@ mapped_by_state_targets <- tar_map(
 
 list(
   # Identify oldest sites
-  tar_target(oldest_active_sites, find_oldest_sites(states, parameter)),
+  tar_target(oldest_active_sites,
+             find_oldest_sites(states, parameter)),
 
   # Static branch object from above
   mapped_by_state_targets,
 
   # Combine branch outputs
   tar_combine(obs_tallies,
-              mapped_by_state_targets[[3]],
+              mapped_by_state_targets$tally,
               command = combine_obs_tallies(!!!.x)),
 
   # Build metadata summary
   tar_combine(
     summary_state_timeseries_csv,
-    mapped_by_state_targets[[4]],
+    mapped_by_state_targets$timeseries_png,
     command = summarize_targets('3_visualize/log/summary_state_timeseries.csv', !!!.x),
     format="file"
   ),
