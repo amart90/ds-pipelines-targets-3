@@ -7,7 +7,7 @@
 */tmp/*
 _targets/
 */out/*
-
+*.Rproj
 
 
 # Exceptions
